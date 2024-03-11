@@ -1,0 +1,63 @@
+body {
+    text-align: center;
+    background: url(Images/background.jpg);
+    background-size: cover;
+    color: gold;
+}
+
+#board {
+    width: 660px;
+    height: 600px;
+
+    margin: 0 auto;    
+    display: flex;
+    flex-wrap: wrap;
+
+    background-size: cover;
+    border: 3px solid black;
+    border-radius: 25px;
+    background-color: rgb(134, 69, 134);
+}
+
+#board div {
+    width: 215px;
+    height: 200px;
+    background-image: url(Images/hat3.png);
+    background-size: cover;
+}
+
+#main-titles {
+    display: inline-flex;
+}
+
+
+#countdown {
+    margin-right: 100px;
+}
+
+#score {
+    margin-left: 100px;
+    margin-top: 26px;
+}
+
+#start-btn {
+ height: 60px;
+ width: 120px;
+ font-size: 20px;
+ border-radius: 20px;
+ margin-bottom: 15px;
+}
+
+.time-msg {
+    font-size: 40px;
+    margin-top: 200px;
+    position: absolute;
+}
+
+#time-msg{
+    margin-left: 20px;
+}
+
+#time-msg1 {
+    margin-left: 1200px;
+}
