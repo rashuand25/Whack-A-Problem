@@ -1,3 +1,17 @@
+document.getElementById('startAnimation').addEventListener('click', function () {
+  document.getElementById('bg-image1').classList.add('animate');
+  document.getElementById('bg-image2').classList.add('animate');
+  document.getElementById('hidden').style.display = 'block'
+  this.style.display = 'none'; // This will hide the button
+  document.getElementById('introTxt').style.display = 'none';
+  ;
+});
+
+// let name = prompt('Hi what is your name?').toUpperCase();
+// let introTxt = document.getElementById('introTxt');
+// introTxt.innerHTML = 'Hello ' + name + '!!! ' + introTxt.innerHTML;
+
+
 window.onload = function () {
   setupBoard();
 }
@@ -37,6 +51,8 @@ function timer() {
       let msg2 = "Game Over!!!"
       document.getElementById('time-msg1').innerText = msg2;
       document.getElementById("time-msg2").innerText = msg2;
+      document.getElementById('countDown').style.display = 'none'
+      document.getElementById('playAgain').style.display = 'block'
       clearInterval(runGame);
     }
   }, 1000);
@@ -53,6 +69,7 @@ function createImageAndCaption(src, captionText, color) {
   caption.textContent = captionText;
   caption.className = 'captions';
   caption.style.color = color;
+  caption.style.textShadow = '2px 2px 2px purple, 2px 2px 2px purple, 2px 2px 2px purple, 2px 2px 2px purple'
 
   const imgContainer = document.createElement('div');
   imgContainer.appendChild(img);
@@ -90,57 +107,104 @@ const problemsArray = [
 //Had to put the score variable here OUTSIDE of the below function. Would not work inside the function I guess because of scope//
 let score = 0;
 
-// Generate random image and chooses random tile//
-function gamePlay() {
-  function randomIndex(array) {
-    return Math.floor(Math.random() * array.length);
+// Array Randomizer//
+function randomIndex(array) {
+  return Math.floor(Math.random() * array.length);
+}
+
+//Random Tile//
+function getRandomTileIndex() {
+  return Math.floor(Math.random() * 9);
+}
+
+function clearTile(tile) {
+  while (tile.firstChild) {
+    tile.firstChild.remove();
+  }
+}
+
+function replaceChildWithClone(node) {
+  let oldNode = node.firstChild;
+  let newNode = oldNode.cloneNode(true);
+  oldNode.parentNode.replaceChild(newNode, oldNode);
+  return newNode;
+}
+
+function imgClick(event) {
+  const imgSrc = event.target.src;
+  event.target.parentNode.remove();
+
+  event.target.removeEventListener('click', imgClick);
+
+  if (blessingsArray.map(e => e.firstChild.src).includes(imgSrc)) {
+    score++;
+  } else if (problemsArray.map(e => e.firstChild.src).includes(imgSrc)) {
+    score--;
   };
 
-  //Assuming you want 9 tiles. Did it twice because I want 2 different hats selected at the same time//
-  let randomTileIndex1 = Math.floor(Math.random() * 9);
-  let randomTileIndex2 = Math.floor(Math.random() * 9);
+  document.getElementById("score").innerText = 'Score: ' + score;
+}
 
-  //Ensures that 2 images from the different arrays arent able to be on the same hat//
-  do {
-    randomTileIndex2 = Math.floor(Math.random() * 9);
-  } while (randomTileIndex2 === randomTileIndex1);
+//Controls game speed//
+let interval = 2000;
+let decreaseRate = 75;
+let minInterval = 500;
+let runGame;
 
-  //Had to create 2 different tile elements for same reason as above//
+function gamePlay() {
+  let randomTileIndex1 = getRandomTileIndex();
+  let randomTileIndex2 = getRandomTileIndex();
+
   let tile1 = document.getElementById(randomTileIndex1.toString());
   let tile2 = document.getElementById(randomTileIndex2.toString());
 
-  //Clears the image off the hat before another image can appear//
-  while (tile1.firstChild) {
-    tile1.firstChild.remove();
-  };
-  while (tile2.firstChild) {
-    tile2.firstChild.remove();
-  };
+  do {
+    randomTileIndex2 = getRandomTileIndex();
+  } while (randomTileIndex2 === randomTileIndex1);
+
+  clearTile(tile1);
+  clearTile(tile2);
 
   let blessingsImg = blessingsArray[randomIndex(blessingsArray)];
   let problemsImg = problemsArray[randomIndex(problemsArray)];
 
-
   tile1.append(blessingsImg);
   tile2.append(problemsImg);
 
-  //ADD AND SUBTRACT TO SCORE based on which array the clicked image is located in//      
-  function imgClick(event) {
-    const imgSrc = event.target.src;
-    event.target.parentNode.remove();
+  let newBlessing = replaceChildWithClone(blessingsImg);
+  let newProblem = replaceChildWithClone(problemsImg);
 
-    event.target.removeEventListener('click', imgClick);
+  newBlessing.addEventListener('click', imgClick);
+  newProblem.addEventListener('click', imgClick);
 
-    //map here is basically creating a new array that contains the src of the images
-    if (blessingsArray.map(e => e.firstChild.src).includes(imgSrc)) {
-      score++;
-    } else if (problemsArray.map(e => e.firstChild.src).includes(imgSrc)) {
-      score--;
-    };
-
-    // Update the score
-    document.getElementById("score").innerText = 'Score: ' + score;
-  }
-  blessingsImg.firstChild.addEventListener('click', imgClick);
-  problemsImg.firstChild.addEventListener('click', imgClick);
+  interval = Math.max(minInterval, interval - decreaseRate);
+  clearInterval(runGame);
+  runGame = setInterval(gamePlay, interval);
 }
+
+function playAgain() {
+  // Reset the score
+  score = 0;
+  document.getElementById("score").innerText = 'Score: ' + score;
+
+  // Clear the game board
+  for (let i = 0; i < 9; i++) {
+    clearTile(document.getElementById(i.toString()));
+  }
+
+  // Hide the 'playAgain' button and show the 'startAnimation' button
+  document.getElementById('playAgain').style.display = 'none';
+  document.getElementById('countDown').style.display = 'block';
+
+  // Reset the timer
+  clearInterval(timer);
+  document.getElementById('countDown').innerHTML = '30:00';
+
+  // Reset the game state
+  clearInterval(runGame);
+}
+
+document.getElementById('playAgain').addEventListener('click', playAgain);
+
+
+

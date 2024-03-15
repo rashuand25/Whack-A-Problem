@@ -9,19 +9,46 @@
 </head>
 
 <body>
-    <div class="background-imgs" id="bg-image1"></div>
-    <div class="background-imgs" id="bg-image2"></div>
-    <div id="main-titles">
-        <div id="countDown" onclick="timer()" style="font-size: 30px; margin-right: 100px;margin-top: 24px;">
-            <button id="start-btn">Start Game</button>
-        </div>
-        <h1>Whack a Problem</h1>
-        <h2 id="score">Score: 0</h2>
+    <!-- Intro-->
+    <div id="intro-section">
+        <p id="introTxt">Welcome to Whack-A-Problem... a classic take on the beloved Whack-A-Mole game with a surprising
+            twist... Instead of whacking MOLES... We whack PROBLEMS!!! Think you have what it takes? Then press the
+            button and let's find out!</p>
+        <button id="startAnimation">Press Me!</button>
     </div>
-    <div id="time-msg1" class="time-msgs"></div>
-    <div id="time-msg2" class="time-msgs"></div>
-    <div id="board"></div>
-    <img id="image">
+
+    <!-- Background Images -->
+    <div id="background-images">
+        <div class="background-imgs" id="bg-image1"></div>
+        <div class="background-imgs" id="bg-image2"></div>
+    </div>
+
+    <!-- Play Again Button -->
+    <button id="playAgain" onclick="playAgain()">Play Again?</button>
+
+    <!-- Hidden Section -->
+    <div id="hidden">
+        <div id="background">
+            <!-- Main Titles -->
+            <div id="main-titles">
+                <div id="countDown" class="countDown" style="font-size: 30px; margin-right: 100px;margin-top: 24px;">
+                    <button id="start-btn" onclick="timer()">Start Game</button>
+                </div>
+                <h1>Whack a Problem</h1>
+                <h2 id="score">Score: 0</h2>
+            </div>
+
+            <!-- Time Messages -->
+            <div id="time-msg1" class="time-msgs"></div>
+            <div id="time-msg2" class="time-msgs"></div>
+
+            <!-- Board -->
+            <div id="board"></div>
+
+            <!-- Images -->
+            <img id="image">
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 
